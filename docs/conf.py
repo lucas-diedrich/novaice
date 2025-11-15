@@ -146,4 +146,8 @@ autodoc_mock_imports = [
     "scipy.stats",
     "sklearn",
     "sklearn.metrics",
+    "rdkit",
+    "rdkit.Chem",
+    "rdkit.Chem.AllChem",
+    "transformers",
 ]
