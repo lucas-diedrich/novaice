@@ -38,15 +38,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Install the package first (without heavy optional deps)
-          pip install -e . --no-deps
-          # Install only the required core dependencies
-          pip install anndata session-info2 numpy
-          # Install doc dependencies
-          pip install docutils ipykernel ipython myst-nb pandas setuptools sphinx sphinx-autodoc-typehints sphinx-book-theme sphinx-copybutton sphinx-tabs sphinxcontrib-bibtex sphinxext-opengraph
-          # Verify installation
-          pip list | grep novaice
-          python -c "import sys; sys.path.insert(0, 'src'); import novaice; print(f'novaice version: {novaice.__version__}')"
+          # Install minimal dependencies for type hints that might be referenced
+          pip install anndata numpy pandas
+          # Install doc building tools
+          pip install docutils ipykernel ipython myst-nb setuptools sphinx sphinx-autodoc-typehints sphinx-book-theme sphinx-copybutton sphinx-tabs sphinxcontrib-bibtex sphinxext-opengraph
 
       - name: Build documentation
         run: |

@@ -7,27 +7,42 @@
 # -- Path setup --------------------------------------------------------------
 import sys
 from datetime import datetime
-from importlib.metadata import metadata
 from pathlib import Path
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE / "extensions"))
+# Add src directory to path so Sphinx can import modules without installation
+sys.path.insert(0, str(HERE.parent / "src"))
 
 
 # -- Project information -----------------------------------------------------
 
-# NOTE: If you installed your project in editable mode, this might be stale.
-#       If this is the case, reinstall it to refresh the metadata
-info = metadata("novaice")
-project = info["Name"]
-author = info["Author"]
-copyright = f"{datetime.now():%Y}, {author}."
-version = info["Version"]
-urls = dict(pu.split(", ") for pu in info.get_all("Project-URL"))
-repository_url = urls["Source"]
+# Try to get metadata from installed package, fallback to reading pyproject.toml
+try:
+    from importlib.metadata import PackageNotFoundError, metadata
 
-# The full version, including alpha/beta/rc tags
-release = info["Version"]
+    info = metadata("novaice")
+    project = info["Name"]
+    author = info["Author"]
+    version = info["Version"]
+    release = info["Version"]
+    urls = dict(pu.split(", ") for pu in info.get_all("Project-URL"))
+    repository_url = urls["Source"]
+except PackageNotFoundError:
+    # Fallback: read from pyproject.toml if package not installed
+    import tomllib
+
+    pyproject_path = HERE.parent / "pyproject.toml"
+    with open(pyproject_path, "rb") as f:
+        pyproject = tomllib.load(f)
+
+    project = pyproject["project"]["name"]
+    author = ", ".join(a["name"] for a in pyproject["project"]["authors"])
+    version = pyproject["project"]["version"]
+    release = version
+    repository_url = pyproject["project"]["urls"]["Source"]
+
+copyright = f"{datetime.now():%Y}, {author}."
 
 bibtex_bibfiles = ["references.bib"]
 templates_path = ["_templates"]
