@@ -1,10 +1,6 @@
 # novaice
 
-[![Tests][badge-tests]][tests]
-[![Documentation][badge-docs]][documentation]
-
-[badge-tests]: https://img.shields.io/github/actions/workflow/status/lucas-diedrich/novaice/test.yaml?branch=main
-[badge-docs]: https://img.shields.io/readthedocs/novaice
+[![Check Build](https://github.com/lucas-diedrich/novaice/actions/workflows/build.yaml/badge.svg)](https://github.com/lucas-diedrich/novaice/actions/workflows/build.yaml)
 
 Chemical perturbation modeling in 24hours
 
