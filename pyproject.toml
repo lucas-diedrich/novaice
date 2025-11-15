@@ -60,13 +60,13 @@ optional-dependencies.test = [
   "coverage>=7.10",
   "pytest",
 ]
+optional-dependencies.torch = [
+  "scvi-tools",
+]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://novaice.readthedocs.io/"
 urls.Homepage = "https://github.com/lucas-diedrich/novaice"
 urls.Source = "https://github.com/lucas-diedrich/novaice"
-optional.dependencies.torch = [
-  "scvi-tools",
-]
 
 [tool.hatch.envs.default]
 installer = "uv"

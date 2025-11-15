@@ -131,4 +131,4 @@ nitpick_ignore = [
     #     ("py:class", "igraph.Graph"),
 ]
 
-autodoc_mock_imports = ["torch", "scvi", "lightning"]
+autodoc_mock_imports = ["torch", "scvi", "lightning", "scipy"]
