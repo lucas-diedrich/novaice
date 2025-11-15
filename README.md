@@ -30,7 +30,7 @@ pip install novaice
 1. Install the latest development version:
 
 ```bash
-pip install git+https://github.com/lucas-diedrich/novaice.git@main#egg=[torch,pp]
+pip install git+https://github.com/lucas-diedrich/novaice.git
 ```
 
 ## Usage
@@ -44,6 +44,9 @@ Evaluation is based on the featurewise $R^2$ value between maximum likelihood es
 ### Run your model
 
 ```python
+from novaice.tl import ChemPertMLPModel, ChemPertVAEModel
+from lightning.pytorch.loggers import TensorBoardLogger
+
 # Setup and train model
 ChemPertMLPModel.setup_anndata(adata, drug_embedding_key="drug_embedding")
 model = ChemPertMLPModel(adata)
@@ -54,6 +57,28 @@ model.train(max_epochs=50)
 # Predict gene expression
 predictions = model.predict_gene_expression()
 ```
+
+### Use TensorBoard logging
+
+To track training metrics with TensorBoard:
+
+```python
+from lightning.pytorch.loggers import TensorBoardLogger
+
+# Create TensorBoard logger
+tb_logger = TensorBoardLogger("logs", name="my_experiment")
+
+# Train with logging
+model.train(max_epochs=50, logger=tb_logger, log_every_n_steps=5)
+```
+
+Then start TensorBoard to visualize the training:
+
+```bash
+tensorboard --logdir=logs
+```
+
+Open your browser to `http://localhost:6006` to view the training metrics.
 
 ## Release notes
 

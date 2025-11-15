@@ -10,17 +10,18 @@ The novaice models are built on [scvi-tools](https://scvi-tools.org/), which use
 
 ### 1. Enable TensorBoard Logging
 
-When calling the `train()` method, pass a logger name to enable TensorBoard logging:
+When calling the `train()` method, create a TensorBoard logger instance to enable logging:
 
 ```python
 from novaice.tl import ChemPertVAEModel
+from lightning.pytorch.loggers import TensorBoardLogger
 import anndata as ad
 
 # Setup your data
 adata = ad.AnnData(...)  # Your gene expression data
 adata.obsm["drug_embedding"] = ...  # Your drug embeddings
 
-# Setup and train with TensorBoard logging
+# Setup model
 ChemPertVAEModel.setup_anndata(adata, drug_embedding_key="drug_embedding")
 model = ChemPertVAEModel(
     adata,
@@ -29,22 +30,27 @@ model = ChemPertVAEModel(
     dropout_rate=0.1
 )
 
+# Create TensorBoard logger
+tb_logger = TensorBoardLogger("logs", name="chempert_vae")
+
 # Train with TensorBoard logging
 model.train(
     max_epochs=100,
-    logger="tensorboard",  # Enable TensorBoard
+    logger=tb_logger,      # Pass logger instance
     log_every_n_steps=5,   # Log metrics every 5 steps
 )
 ```
 
-By default, logs are saved to `lightning_logs/` in your current directory.
+**Important:** Do not pass `logger="tensorboard"` as a string - this will cause errors. Always create a proper logger instance with `TensorBoardLogger()`.
+
+By default, logs are saved to `logs/chempert_vae/` in your current directory.
 
 ### 2. View Results in TensorBoard
 
 Launch TensorBoard to view your training progress:
 
 ```bash
-tensorboard --logdir lightning_logs/
+tensorboard --logdir=logs
 ```
 
 Then open your browser to `http://localhost:6006` to view the dashboard.
@@ -56,28 +62,30 @@ Then open your browser to `http://localhost:6006` to view the dashboard.
 Use different logger names for different experiments:
 
 ```python
+from lightning.pytorch.loggers import TensorBoardLogger
+
 # Experiment 1: Small model
+tb_logger_small = TensorBoardLogger("logs", name="vae_small_model")
 model_small = ChemPertVAEModel(adata, n_hidden=64, n_latent=16)
 model_small.train(
     max_epochs=100,
-    logger="tensorboard",
-    experiment_name="vae_small_model"  # Custom experiment name
+    logger=tb_logger_small
 )
 
 # Experiment 2: Large model
+tb_logger_large = TensorBoardLogger("logs", name="vae_large_model")
 model_large = ChemPertVAEModel(adata, n_hidden=256, n_latent=64)
 model_large.train(
     max_epochs=100,
-    logger="tensorboard",
-    experiment_name="vae_large_model"
+    logger=tb_logger_large
 )
 
 # Experiment 3: High dropout
+tb_logger_dropout = TensorBoardLogger("logs", name="vae_high_dropout")
 model_dropout = ChemPertVAEModel(adata, n_hidden=128, n_latent=32, dropout_rate=0.3)
 model_dropout.train(
     max_epochs=100,
-    logger="tensorboard",
-    experiment_name="vae_high_dropout"
+    logger=tb_logger_dropout
 )
 ```
 
@@ -86,7 +94,7 @@ model_dropout.train(
 Organize experiments by saving logs to different directories:
 
 ```python
-from pytorch_lightning.loggers import TensorBoardLogger
+from lightning.pytorch.loggers import TensorBoardLogger
 
 # Create custom logger
 logger = TensorBoardLogger(
@@ -105,7 +113,7 @@ model.train(
 Then view all experiments:
 
 ```bash
-tensorboard --logdir experiments/
+tensorboard --logdir=experiments
 ```
 
 ## Grid Search Example
@@ -114,7 +122,7 @@ Here's a complete example for comparing multiple hyperparameter configurations:
 
 ```python
 from novaice.tl import ChemPertVAEModel
-from pytorch_lightning.loggers import TensorBoardLogger
+from lightning.pytorch.loggers import TensorBoardLogger
 import anndata as ad
 import numpy as np
 
@@ -162,7 +170,7 @@ for n_hidden in hidden_sizes:
 View the results:
 
 ```bash
-tensorboard --logdir hyperparameter_search/
+tensorboard --logdir=hyperparameter_search
 ```
 
 ## Viewing Metrics in TensorBoard
@@ -183,7 +191,7 @@ To compare runs:
 You can also log custom metrics by accessing the trainer:
 
 ```python
-from pytorch_lightning.callbacks import Callback
+from lightning.pytorch.callbacks import Callback
 
 class CustomMetricsCallback(Callback):
     def on_train_epoch_end(self, trainer, pl_module):
@@ -197,9 +205,12 @@ class CustomMetricsCallback(Callback):
         )
 
 # Use the callback during training
+from lightning.pytorch.loggers import TensorBoardLogger
+
+tb_logger = TensorBoardLogger("logs", name="custom_metrics")
 model.train(
     max_epochs=100,
-    logger="tensorboard",
+    logger=tb_logger,
     callbacks=[CustomMetricsCallback()]
 )
 ```
