@@ -21,6 +21,11 @@
 .. autosummary::
     :toctree: generated
 
+    ChemPertVAEModel
+    ChemPertMLPModel
+    ChemPertVAE
+    ChemPertMLP
+
 ```
 
 ## Plotting
