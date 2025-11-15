@@ -31,7 +31,7 @@ pip install novaice
 1. Install the latest development version:
 
 ```bash
-pip install git+https://github.com/lucas-diedrich/novaice.git@main
+pip install git+https://github.com/lucas-diedrich/novaice.git@main#egg=[torch,pp]
 ```
 
 ## Usage

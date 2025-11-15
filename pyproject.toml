@@ -28,7 +28,6 @@ classifiers = [
 ]
 dependencies = [
   "anndata",
-  "scvi-tools",
   # for debug logging (referenced from the issue template)
   "session-info2",
 ]
@@ -52,9 +51,6 @@ optional-dependencies.doc = [
   "sphinx-tabs",
   "sphinxcontrib-bibtex>=1",
   "sphinxext-opengraph",
-  # Override torch to prevent scvi-tools from pulling full package
-  "torch==2.9.1+cpu; platform_system!='Darwin'",
-  "torch==2.9.1; platform_system=='Darwin'",
 ]
 optional-dependencies.pp = [
   "rdkit",
@@ -68,6 +64,9 @@ optional-dependencies.test = [
 urls.Documentation = "https://novaice.readthedocs.io/"
 urls.Homepage = "https://github.com/lucas-diedrich/novaice"
 urls.Source = "https://github.com/lucas-diedrich/novaice"
+optional.dependencies.torch = [
+  "scvi-tools",
+]
 
 [tool.hatch.envs.default]
 installer = "uv"

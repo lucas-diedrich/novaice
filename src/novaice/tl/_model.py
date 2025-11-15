@@ -12,7 +12,7 @@ from scvi.data.fields import LayerField, ObsmField
 from scvi.model.base import BaseModelClass, UnsupervisedTrainingMixin
 from scvi.utils import setup_anndata_dsp
 
-from ._module import ChemPertVAE
+from ._module import ChemPertMLP, ChemPertVAE
 
 logger = logging.getLogger(__name__)
 
@@ -432,7 +432,7 @@ class ChemPertMLPModel(UnsupervisedTrainingMixin, BaseModelClass):
     >>> latent = model.get_latent_representation()
     """
 
-    _module_cls = ChemPertVAE
+    _module_cls = ChemPertMLP
 
     def __init__(
         self,
