@@ -52,8 +52,9 @@ optional-dependencies.doc = [
   "sphinx-tabs",
   "sphinxcontrib-bibtex>=1",
   "sphinxext-opengraph",
-  "torch+cpu; platform_system!='Darwin'",
-
+  # Override torch to prevent scvi-tools from pulling full package
+  "torch==2.9.1+cpu; platform_system!='Darwin'",
+  "torch==2.9.1; platform_system=='Darwin'",
 ]
 optional-dependencies.pp = [
   "rdkit",
