@@ -34,6 +34,22 @@ pip install novaice
 pip install git+https://github.com/lucas-diedrich/novaice.git@main
 ```
 
+## Usage
+
+### Run your model
+
+```python
+# Setup and train model
+ChemPertMLPModel.setup_anndata(adata, drug_embedding_key="drug_embedding")
+model = ChemPertMLPModel(adata)
+
+# Train
+model.train(max_epochs=50)
+
+# Predict gene expression
+predictions = model.predict_gene_expression()
+```
+
 ## Release notes
 
 See the [changelog][].
