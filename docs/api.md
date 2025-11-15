@@ -9,6 +9,9 @@
 .. autosummary::
     :toctree: generated
 
+    pp.morgan_fingerprints
+    pp.tanimoto_similarity
+    pp.foundation_model_embeddings
 
 ```
 
@@ -21,10 +24,10 @@
 .. autosummary::
     :toctree: generated
 
-    ChemPertVAEModel
-    ChemPertMLPModel
-    ChemPertVAE
-    ChemPertMLP
+    tl.ChemPertVAEModel
+    tl.ChemPertMLPModel
+    tl.ChemPertVAE
+    tl.ChemPertMLP
 
 ```
 

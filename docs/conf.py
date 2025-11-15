@@ -145,24 +145,3 @@ nitpick_ignore = [
     # you can add an exception to this list.
     #     ("py:class", "igraph.Graph"),
 ]
-
-autodoc_mock_imports = [
-    "torch",
-    "scvi",
-    "scvi.data",
-    "scvi.data.fields",
-    "scvi.model",
-    "scvi.model.base",
-    "scvi.module",
-    "scvi.module.base",
-    "scvi.utils",
-    "lightning",
-    "scipy",
-    "scipy.stats",
-    "sklearn",
-    "sklearn.metrics",
-    "rdkit",
-    "rdkit.Chem",
-    "rdkit.Chem.AllChem",
-    "transformers",
-]
