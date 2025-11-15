@@ -351,6 +351,91 @@ class ChemPertVAEModel(UnsupervisedTrainingMixin, BaseModelClass):
 
         return errors
 
+    def get_ci_calibration(
+        self,
+        adata: AnnData | None = None,
+        indices: list[int] | None = None,
+        batch_size: int | None = None,
+        confidence_level: float = 0.95,
+        return_per_sample: bool = False,
+    ) -> dict | np.ndarray:
+        """
+        Evaluate calibration of predicted confidence intervals.
+
+        This method checks if the model's predicted uncertainty is well-calibrated by computing
+        what proportion of true gene expression values fall within the predicted confidence intervals.
+        A well-calibrated model should have approximately confidence_level proportion of true values
+        within the predicted intervals.
+
+        Parameters
+        ----------
+        adata
+            AnnData object to use. If None, uses the AnnData object used to initialize the model.
+        indices
+            Indices of samples to include. If None, all samples are used.
+        batch_size
+            Minibatch size for data loading into model. If None, uses the batch_size from training.
+        confidence_level
+            Confidence level for the interval (e.g., 0.95 for 95% CI). Default: 0.95
+        return_per_sample
+            If True, returns the proportion of genes within CI for each sample.
+            If False, returns overall calibration statistics. Default: False
+
+        Returns
+        -------
+        calibration
+            If return_per_sample is False: Dictionary with calibration statistics:
+                - 'expected_coverage': The confidence level requested
+                - 'observed_coverage': Proportion of values within predicted CI
+                - 'coverage_per_sample': Mean coverage across samples
+                - 'calibration_error': Absolute difference between expected and observed
+            If return_per_sample is True: Array of shape (n_samples,) with proportion of genes
+                within CI for each sample
+
+        Examples
+        --------
+        >>> calibration = model.get_ci_calibration(adata_test, confidence_level=0.95)
+        >>> print(f"Expected: {calibration['expected_coverage']:.2%}")
+        >>> print(f"Observed: {calibration['observed_coverage']:.2%}")
+        >>> print(f"Calibration error: {calibration['calibration_error']:.4f}")
+        """
+        from scipy.stats import norm
+
+        adata = self._validate_anndata(adata)
+        gene_expr_true = adata.X if indices is None else adata.X[indices]
+
+        # Get predicted mean and variance
+        gene_expr_pred_mean, gene_expr_pred_var = self.predict_gene_expression(
+            adata=adata, indices=indices, batch_size=batch_size, return_dist=True
+        )
+
+        # Compute z-score for the confidence level
+        z_score = norm.ppf((1 + confidence_level) / 2)
+
+        # Compute confidence intervals
+        ci_lower = gene_expr_pred_mean - z_score * np.sqrt(gene_expr_pred_var)
+        ci_upper = gene_expr_pred_mean + z_score * np.sqrt(gene_expr_pred_var)
+
+        # Check if true values are within the confidence intervals
+        within_ci = (gene_expr_true >= ci_lower) & (gene_expr_true <= ci_upper)
+
+        if return_per_sample:
+            # Return proportion of genes within CI for each sample
+            coverage_per_sample = np.mean(within_ci, axis=1)
+            return coverage_per_sample
+        else:
+            # Compute overall calibration statistics
+            observed_coverage = np.mean(within_ci)
+            coverage_per_sample = np.mean(within_ci, axis=1)
+            calibration_error = np.abs(confidence_level - observed_coverage)
+
+            return {
+                "expected_coverage": confidence_level,
+                "observed_coverage": observed_coverage,
+                "coverage_per_sample": np.mean(coverage_per_sample),
+                "calibration_error": calibration_error,
+            }
+
     def save_predictions_to_adata(
         self,
         adata: AnnData | None = None,
@@ -658,6 +743,91 @@ class ChemPertMLPModel(UnsupervisedTrainingMixin, BaseModelClass):
             raise ValueError(f"Unknown method: {method}. Use 'mse', 'mae', or 'r2'.")
 
         return errors
+
+    def get_ci_calibration(
+        self,
+        adata: AnnData | None = None,
+        indices: list[int] | None = None,
+        batch_size: int | None = None,
+        confidence_level: float = 0.95,
+        return_per_sample: bool = False,
+    ) -> dict | np.ndarray:
+        """
+        Evaluate calibration of predicted confidence intervals.
+
+        This method checks if the model's predicted uncertainty is well-calibrated by computing
+        what proportion of true gene expression values fall within the predicted confidence intervals.
+        A well-calibrated model should have approximately confidence_level proportion of true values
+        within the predicted intervals.
+
+        Parameters
+        ----------
+        adata
+            AnnData object to use. If None, uses the AnnData object used to initialize the model.
+        indices
+            Indices of samples to include. If None, all samples are used.
+        batch_size
+            Minibatch size for data loading into model. If None, uses the batch_size from training.
+        confidence_level
+            Confidence level for the interval (e.g., 0.95 for 95% CI). Default: 0.95
+        return_per_sample
+            If True, returns the proportion of genes within CI for each sample.
+            If False, returns overall calibration statistics. Default: False
+
+        Returns
+        -------
+        calibration
+            If return_per_sample is False: Dictionary with calibration statistics:
+                - 'expected_coverage': The confidence level requested
+                - 'observed_coverage': Proportion of values within predicted CI
+                - 'coverage_per_sample': Mean coverage across samples
+                - 'calibration_error': Absolute difference between expected and observed
+            If return_per_sample is True: Array of shape (n_samples,) with proportion of genes
+                within CI for each sample
+
+        Examples
+        --------
+        >>> calibration = model.get_ci_calibration(adata_test, confidence_level=0.95)
+        >>> print(f"Expected: {calibration['expected_coverage']:.2%}")
+        >>> print(f"Observed: {calibration['observed_coverage']:.2%}")
+        >>> print(f"Calibration error: {calibration['calibration_error']:.4f}")
+        """
+        from scipy.stats import norm
+
+        adata = self._validate_anndata(adata)
+        gene_expr_true = adata.X if indices is None else adata.X[indices]
+
+        # Get predicted mean and variance
+        gene_expr_pred_mean, gene_expr_pred_var = self.predict_gene_expression(
+            adata=adata, indices=indices, batch_size=batch_size, return_dist=True
+        )
+
+        # Compute z-score for the confidence level
+        z_score = norm.ppf((1 + confidence_level) / 2)
+
+        # Compute confidence intervals
+        ci_lower = gene_expr_pred_mean - z_score * np.sqrt(gene_expr_pred_var)
+        ci_upper = gene_expr_pred_mean + z_score * np.sqrt(gene_expr_pred_var)
+
+        # Check if true values are within the confidence intervals
+        within_ci = (gene_expr_true >= ci_lower) & (gene_expr_true <= ci_upper)
+
+        if return_per_sample:
+            # Return proportion of genes within CI for each sample
+            coverage_per_sample = np.mean(within_ci, axis=1)
+            return coverage_per_sample
+        else:
+            # Compute overall calibration statistics
+            observed_coverage = np.mean(within_ci)
+            coverage_per_sample = np.mean(within_ci, axis=1)
+            calibration_error = np.abs(confidence_level - observed_coverage)
+
+            return {
+                "expected_coverage": confidence_level,
+                "observed_coverage": observed_coverage,
+                "coverage_per_sample": np.mean(coverage_per_sample),
+                "calibration_error": calibration_error,
+            }
 
     def save_predictions_to_adata(
         self,
