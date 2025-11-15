@@ -9,10 +9,14 @@ description = "Chemical perturbation modeling in 24hours"
 readme = "README.md"
 license = { file = "LICENSE" }
 maintainers = [
-  { name = "NovAIces", email = "lucas.diedrich@hotmail.de" },
+  { name = "NovAIces" },
 ]
 authors = [
   { name = "NovAIces" },
+  { name = "Benedikt Samwer" },
+  { name = "Michael Baggio Lorenz" },
+  { name = "Lucas Diedrich" },
+
 ]
 requires-python = ">=3.11"
 classifiers = [
