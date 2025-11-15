@@ -24,9 +24,11 @@ classifiers = [
 ]
 dependencies = [
   "anndata",
+  "scvi-tools",
   # for debug logging (referenced from the issue template)
   "session-info2",
 ]
+
 optional-dependencies.dev = [
   "pre-commit",
   "twine>=4.0.2",
@@ -46,6 +48,10 @@ optional-dependencies.doc = [
   "sphinx-tabs",
   "sphinxcontrib-bibtex>=1",
   "sphinxext-opengraph",
+]
+optional-dependencies.pp = [
+  "rdkit",
+  "transformers",
 ]
 optional-dependencies.test = [
   "coverage>=7.10",
