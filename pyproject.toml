@@ -52,6 +52,8 @@ optional-dependencies.doc = [
   "sphinx-tabs",
   "sphinxcontrib-bibtex>=1",
   "sphinxext-opengraph",
+  "torch==2.9.1+cpu; platform_system!='Darwin'",
+
 ]
 optional-dependencies.pp = [
   "rdkit",
