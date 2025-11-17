@@ -4,8 +4,8 @@
 
 Chemical perturbation modeling in 24hours.
 
-[!Important]
-This model was developed during the Nucleate Hackathon 2025, Munich and does not represent a serious scientific project.
+> [!Important]
+> This model was developed during the Nucleate Hackathon 2025, Munich and does not represent a serious scientific project.
 
 ## Getting started
 
