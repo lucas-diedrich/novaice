@@ -67,8 +67,6 @@ See our [final presentation](https://github.com/lucas-diedrich/nucleate-hackatho
 **Leverages [molformer embeddings](https://github.com/IBM/molformer.git), [RDKit](https://github.com/rdkit/rdkit.git), and [scverse libraries](https://github.com/scverse)**
 
 
-
-
 [uv]: https://github.com/astral-sh/uv
 [scverse discourse]: https://discourse.scverse.org/
 [issue tracker]: https://github.com/lucas-diedrich/novaice/issues
