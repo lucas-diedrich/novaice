@@ -9,8 +9,7 @@ Chemical perturbation modeling in 24hours.
 
 ## Getting started
 
-Please refer to the [documentation][],
-in particular, the [API documentation][].
+Have a look at these [overview slides]()
 
 ## Installation
 
@@ -57,16 +56,18 @@ predictions = model.predict_gene_expression()
 
 ## Release notes
 
-See the [changelog][].
+See our [final presentation](https://github.com/lucas-diedrich/nucleate-hackathon-2025/blob/47d8e2eb420225d4da94e2f28c1699857b8b9bee/presentation/novaice-results.pdf) on model structure, model performance, and potential impact of the model
 
-## Contact
+## References
 
-For questions and help requests, you can reach out in the [scverse discourse][].
-If you found a bug, please use the [issue tracker][].
+**Built with scvi-tools**
 
-## Citation
+> Gayoso, A., Lopez, R., Xing, G. et al. A Python library for probabilistic analysis of single-cell omics data. Nat Biotechnol 40, 163–166 (2022). https://doi.org/10.1038/s41587-021-01206-w
 
-> t.b.a
+**Leverages [molformer embeddings](https://github.com/IBM/molformer.git), [RDKit](https://github.com/rdkit/rdkit.git), and [scverse libraries](https://github.com/scverse)**
+
+
+
 
 [uv]: https://github.com/astral-sh/uv
 [scverse discourse]: https://discourse.scverse.org/
