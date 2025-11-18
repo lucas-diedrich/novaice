@@ -29,7 +29,7 @@ pip install novaice
 1. Install the latest development version:
 
 ```bash
-pip install git+https://github.com/lucas-diedrich/novaice.git@main#egg=[torch,pp]
+pip install git+https://github.com/lucas-diedrich/novaice.git
 ```
 
 ## Usage
@@ -49,10 +49,21 @@ model = ChemPertMLPModel(adata)
 
 # Train
 model.train(max_epochs=50)
-
-# Predict gene expression
-predictions = model.predict_gene_expression()
 ```
+You can inspect the training run with tensorboard:
+
+```python
+tensorboard --logdir=logs
+```
+
+To predict gene expression in unseen data, pass a new a new `anndata` object with the smiles embeddings in a `.obsm` slot with 
+the same key as the training data
+
+```python
+# Predict gene expression
+predictions = model.predict_gene_expression(adata=adata_test)
+```
+
 
 ## Release notes
 
